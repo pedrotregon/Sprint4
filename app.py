@@ -4,7 +4,7 @@ import streamlit as st
 
 st.title('Análisis de Datos de Vehículos')
 
-car_data = pd.read_csv('/Users/pedrotrevino/Documents/GitHub_reposit/Sprint4/vehicles_us.csv') # leer los datos
+car_data = pd.read_csv('vehicles_us.csv') # leer los datos
 # Convertir la columna 'date_posted' a tipo fecha
 car_data['date_posted'] = pd.to_datetime(car_data['date_posted'])
 
