@@ -7,9 +7,7 @@ st.title('Análisis de Datos de Vehículos')
 car_data = pd.read_csv('/Users/pedrotrevino/Documents/GitHub_reposit/Sprint4/vehicles_us.csv') # leer los datos
 # Convertir la columna 'date_posted' a tipo fecha
 car_data['date_posted'] = pd.to_datetime(car_data['date_posted'])
-hist_button = st.button('Construir histograma') # crear un botón
-
-st.title('Análisis de Datos de Vehículos')
+hist_button = st.button('Histogramade anuncios de venta de coches') # crear un botón
         
 if hist_button: # al hacer clic en el botón
             # escribir un mensaje
@@ -23,9 +21,14 @@ if hist_button: # al hacer clic en el botón
 
 if st.button('Gráfico de Líneas - Precios Medios a lo Largo del Tiempo'):
     st.write('Precios Medios de Vehículos a lo Largo del Tiempo')
-    data = car_data.groupby(car_data['date_posted'].dt.to_period("M")).price.mean()
-    fig = px.line(data, title='Precios Medios Mensuales')
+    # datos por mes y calcular el precio medio
+    data = car_data.groupby(car_data['date_posted'].dt.to_period("M")).price.mean().reset_index(name='average_price')
+    # 'date_posted' a string para la serialización de Json
+    data['date_posted'] = data['date_posted'].dt.strftime('%Y-%m')
+    
+    fig = px.line(data, x='date_posted', y='average_price', title='Precios Medios Mensuales de Vehículos')
     st.plotly_chart(fig, use_container_width=True)
+
 
 if st.button('Diagrama de Barras - Vehículos por Color'):
     st.write('Cantidad de Vehículos por Color')
@@ -44,8 +47,12 @@ if st.button('Gráfico de Barras - Vehículos por Año de Modelo'):
 
 if st.button('Gráfico de Área - Anuncios Publicados a lo Largo del Tiempo'):
     st.write('Anuncios Publicados a lo Largo del Tiempo')
-    data = car_data.groupby(car_data['date_posted'].dt.to_period("M")).size()
-    fig = px.area(data, title='Anuncios Publicados por Mes')
+    # datos por mes y contar los anuncios
+    data = car_data.groupby(car_data['date_posted'].dt.to_period("M")).size().reset_index(name='count')
+    # 'date_posted' a string para la serialización
+    data['date_posted'] = data['date_posted'].dt.strftime('%Y-%m')
+    
+    fig = px.area(data, x='date_posted', y='count', title='Anuncios Publicados por Mes')
     st.plotly_chart(fig, use_container_width=True)
 
 if st.button('Histograma de Precios'):
