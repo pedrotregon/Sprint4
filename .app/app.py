@@ -42,8 +42,15 @@ if st.button('Gráfico Circular - Tipos de Combustible'):
 
 if st.button('Gráfico de Barras - Vehículos por Año de Modelo'):
     st.write('Cantidad de Vehículos por Año de Modelo')
-    fig = px.bar(car_data, x='model_year', title='Vehículos por Año de Modelo')
+    # Contar la cantidad de vehículos por año de modelo
+    data = car_data['model_year'].value_counts().reset_index()
+    data.columns = ['model_year', 'count']
+    # Asegurarse de que el año del modelo sea un tipo de dato categórico para el eje x
+    data['model_year'] = data['model_year'].astype(str)
+    # Crear el gráfico
+    fig = px.bar(data, x='model_year', y='count', title='Vehículos por Año de Modelo')
     st.plotly_chart(fig, use_container_width=True)
+
 
 if st.button('Gráfico de Área - Anuncios Publicados a lo Largo del Tiempo'):
     st.write('Anuncios Publicados a lo Largo del Tiempo')
