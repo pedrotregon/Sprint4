@@ -7,6 +7,33 @@ st.title('Análisis de Datos de Vehículos')
 car_data = pd.read_csv('/Users/pedrotrevino/Documents/GitHub_reposit/Sprint4/vehicles_us.csv') # leer los datos
 # Convertir la columna 'date_posted' a tipo fecha
 car_data['date_posted'] = pd.to_datetime(car_data['date_posted'])
+
+if st.sidebar.checkbox('Mostrar explorador de datos'):
+    st.subheader('Explorador de Datos Interactivo')
+    st.write('Utiliza la tabla para explorar y filtrar los datos.')
+    st.dataframe(car_data)  # Asume que car_data es tu DataFrame
+
+st.subheader('Indicadores Clave de Rendimiento')
+avg_price = car_data['price'].mean()
+avg_odometer = car_data['odometer'].mean()
+total_listings = car_data.shape[0]
+st.metric(label="Precio Medio", value=f"${avg_price:,.2f}")
+st.metric(label="Kilometraje Medio", value=f"{avg_odometer:,.0f} km")
+st.metric(label="Total de Anuncios", value=f"{total_listings}")
+
+if st.sidebar.checkbox('Seleccionar columnas específicas'):
+    st.subheader('Mostrar Subconjunto de Datos')
+    columns_to_show = st.multiselect('Selecciona las columnas que deseas mostrar:', car_data.columns)
+    st.dataframe(car_data[columns_to_show])
+
+st.subheader('Resumen de Tendencias')
+latest_date = car_data['date_posted'].max()
+latest_data = car_data[car_data['date_posted'] == latest_date]
+latest_avg_price = latest_data['price'].mean()
+delta_price = latest_avg_price - avg_price
+st.metric(label="Precio Medio en el Último Día de Publicación", value=f"${latest_avg_price:,.2f}", delta=f"${delta_price:,.2f}")
+
+
 hist_button = st.button('Histogramade anuncios de venta de coches') # crear un botón
         
 if hist_button: # al hacer clic en el botón
